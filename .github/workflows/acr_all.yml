@@ -1,4 +1,4 @@
-name: acr-3
+name: acr-all
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     types:
       - manual-trigger
       - manual-trigger-acr
-      - manual-trigger-acr-3
+      - manual-trigger-acr-1
   schedule:
     - cron: '0 6 * * *'
 permissions:
@@ -21,10 +21,13 @@ jobs:
         uses: opencontainers/distribution-spec@main
         env:
           OCI_ROOT_URL: https://ociconformancetest.azurecr.io
-          OCI_NAMESPACE: ocitest/content-discovery
+          OCI_NAMESPACE: ocitest/alltests
           OCI_USERNAME: ${{ secrets.ACR_USERNAME }}
           OCI_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+          OCI_TEST_PULL: 1
+          OCI_TEST_PUSH: 1
           OCI_TEST_CONTENT_DISCOVERY: 1
+          OCI_TEST_CONTENT_MANAGEMENT: 1
           OCI_HIDE_SKIPPED_WORKFLOWS: 1
       - name: 'Az CLI login'
         if: always()
@@ -36,5 +39,5 @@ jobs:
       - name: 'Publish test results'
         if: always()
         run: |
-            az storage blob upload --account-name ociconformance --container-name test-results --name content-discovery/report.html --file ./report.html --auth-mode login
-            az storage blob upload --account-name ociconformance --container-name test-results --name content-discovery/junit.html --file ./junit.xml --auth-mode login
+            az storage blob upload --account-name ociconformance --container-name test-results --name alltests/report.html --file ./report.html --auth-mode login
+            az storage blob upload --account-name ociconformance --container-name test-results --name alltests/junit.html --file ./junit.xml --auth-mode login
