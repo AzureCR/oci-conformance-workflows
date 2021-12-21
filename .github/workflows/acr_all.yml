@@ -1,8 +1,5 @@
 name: acr-all
 on:
-  push:
-    branches:
-      - "*"
   repository_dispatch:
     types:
       - manual-trigger
